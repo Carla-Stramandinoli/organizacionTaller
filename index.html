@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizacion taller</title>
+    <link rel="stylesheet" href="css/styles.css"> 
+</head>
+
+<body>
+    <h1>Organizacion taller</h1>
+
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Operador</th>
+                    <th>Hora inicio</th>
+                    <th>Hora fin</th>
+                    <th>Total hs por dia</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                <!-- Estrucutura vacia para inicializar -->
+                <tr>
+                    <td><input type="date" class="date"></td>
+                    <td><input type="text" class="operator"></td>
+                    <td><input type="number" class="start-time"></td>
+                    <td><input type="number" class="end-time"></td>
+                    <td class="total-day"></td>
+                    <td>
+                        <button class="btn-save">Guardar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>
