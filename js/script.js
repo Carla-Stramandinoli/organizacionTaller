@@ -1,3 +1,4 @@
+
 let tbody = document.getElementById('tbody');
 
 let newElements = [
@@ -28,32 +29,28 @@ function createContentTable(newElement) {
     let contentTable = document.createElement('tr');
     console.log('product', newElement);
     contentTable.innerHTML = `
-    <td><input type="date" class="date" value="${newElement.date}"></td>
-    <td><input type="text" class="operator" value="${newElement.operator}"></td>
-    <td><input type="number" class="start-time" value="${newElement.startTime}"></td>
-    <td><input type="number" class="end-time" value="${newElement.endTime}"></td>
+    <td>${newElement.date}</td>
+    <td>${newElement.operator}</td>
+    <td>${newElement.startTime}</td>
+    <td>${newElement.endTime}</td>
     <td>${newElement.endTime - newElement.startTime}</td>
-    <td>
-        <button class="btn-save">Guardar</button>
-    </td>
-    `;
+    <td><button class="btnDelete">Eliminar</button></td> `;
 
     tbody.appendChild(contentTable);
+    deleteRow(contentTable);
+
 }
 
-//GUARDAR ELEMENTOS NUEVOS EN EL ARRAY
+//GUARDAR ELEMENTOS NUEVOS EN EL ARRAY (pasarlo a un DB a futuro)
 function addElementoToArray(data) {
     newElements.push(data);
-    console.log("elementos agregados, ", data.totalDay);
-    console.log("newelements, ", newElements);
-
 }
 
 // BINDEO EVENT CON BOTON 
-let btnSave = document.querySelectorAll(".btn-save");
+let btnSave = document.querySelectorAll(".btnSave");
 if (btnSave) {
     btnSave.forEach(btn => {
-        tbody.addEventListener("click", () => {
+        btn.addEventListener("click", () => {
             console.log("se hizo click en el boton");
 
             let date = document.querySelector(".date").value;
@@ -83,12 +80,29 @@ function loadData() {
                     <td>${element.startTime}</td>
                     <td>${element.endTime}</td>
                     <td>${element.totalDay}</td>
+                    <td><button class="btnDelete">Eliminar</button></td>
                 </tr>
             `
-            tbody.appendChild(contentTable);
-            // createContentTable(element);
+            deleteRow(contentTable);
 
+            tbody.appendChild(contentTable);
         }
         console.log("elementos cargados correctamente", newElements)
     }
+}
+
+// funcion para el btn eliminar de la fila (confirma la seleccion y elimina)
+
+function deleteRow(contentToDelete) {
+    let btnDelete = document.querySelectorAll(".btnDelete");
+    btnDelete.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            if (confirm("Estas seguro que deseas borrar este registro?") == true) {
+                console.log("su seleccion fue aceptar");
+                contentToDelete.remove();
+            } else {
+                console.log("su seleccion fue cancelar");
+            }
+        });
+    });
 }
