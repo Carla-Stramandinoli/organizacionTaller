@@ -57,6 +57,9 @@ function createContentTable(newElement) {
     tbody.appendChild(contentTable);
     deleteRow(contentTable);
     filterName(newElements);
+    // if(newElement){
+    //     writeNamePerPerson();
+    // }
 }
 
 //GUARDAR ELEMENTOS NUEVOS EN EL ARRAY (pasarlo a un DB a futuro)
@@ -99,7 +102,7 @@ function loadData() {
             contentTable.innerHTML = `
                 <tr>
                     <td>${element.date}</td>
-                    <td class="nameOperator">${element.operator}</td>
+                    <td class="arrayToFilterOperator">${element.operator}</td>
                     <td>${element.startTime}</td>
                     <td>${element.endTime}</td>
                     <td>${element.totalDay}</td>
@@ -131,31 +134,30 @@ function deleteRow(contentToDelete) {
 }
 
 // funcion para filtrar nombres(operadores) repetidos
+// modificarlo para que cuando se agrega uno nuevo desde el input tambien se sume a la tabla.
 
-let nameOperator = document.querySelectorAll(".nameOperator");
-
-function filterName(nameOperator) {
+function filterName(arrayToFilterOperator) {
     let nameCounts = {};
-    let arrayNameOperator = Array.from(nameOperator);
+    // let arrayNameOperator = Array.from(arrayToFilterOperator);
+    let arrayNameOperator = arrayToFilterOperator;
 
     arrayNameOperator.forEach(element => {
-        let name = element.value || element.textContent; // Toma el valor o texto del nodo
+        let name = element.operator; // Toma el valor o texto del nodo
         nameCounts[name] = (nameCounts[name] || 0) + 1;
     })
 
-    console.log("Array para recorrer:", Array.from(nameOperator).map(el => el.value || el.textContent));
+    console.log("Array para recorrer:", Array.from(arrayToFilterOperator).map(el => el.operator));
     console.log(Object.keys(nameCounts));
 
     const repeatedNames = Object.keys(nameCounts).filter(name => nameCounts[name] > 0);
     return repeatedNames;
 }
 
-// Usar la función
-let repeatedNames = filterName(nameOperator);
-console.log("Nombres repetidos:", repeatedNames);
+// Usar la función filterName()
+let repeatedNames = filterName(newElements);
+console.log("Nombres repetidos o unicos:", repeatedNames);
 
 let tBodyTotal = document.querySelector(".tBodyTotal");
-
 
 // dibujar en la tabla los nombres(operadores) de la primer tabla para despues calcular el total
 function writeNamePerPerson() {
@@ -167,7 +169,7 @@ function writeNamePerPerson() {
             contentTableTotal.innerHTML =
                 ` 
                  <td class="tdNameOperator">${element}</td>
-                 <td></td>
+                 <td class="totalPerPerson"></td>
                 `
             tBodyTotal.appendChild(contentTableTotal);
         }
