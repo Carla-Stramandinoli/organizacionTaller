@@ -13,7 +13,25 @@ let newElements = [
     },
     {
         date: "2024-06-12",
+        operator: "Car",
+        startTime: "8",
+        endTime: "12",
+        get totalDay() {
+            return this.endTime - this.startTime
+        }
+    },
+    {
+        date: "2024-06-12",
         operator: "Juan",
+        startTime: "8",
+        endTime: "12",
+        get totalDay() {
+            return this.endTime - this.startTime
+        }
+    },
+    {
+        date: "2024-06-12",
+        operator: "Pedro",
         startTime: "8",
         endTime: "12",
         get totalDay() {
@@ -38,7 +56,7 @@ function createContentTable(newElement) {
 
     tbody.appendChild(contentTable);
     deleteRow(contentTable);
-
+    filterName(newElements);
 }
 
 //GUARDAR ELEMENTOS NUEVOS EN EL ARRAY (pasarlo a un DB a futuro)
@@ -53,8 +71,8 @@ if (btnSave) {
         btn.addEventListener("click", () => {
             console.log("se hizo click en el boton");
 
-            let date = document.querySelector(".date").value;
-            let operator = document.querySelector(".operator").value;
+            let date = document.querySelector(".inputDate").value;
+            let operator = document.querySelector(".operator").value.charAt(0).toUpperCase() + document.querySelector(".operator").value.slice(1);
             let startTime = document.querySelector(".start-time").value;
             let endTime = document.querySelector(".end-time").value;
             let totalDay = endTime - startTime;
@@ -63,6 +81,11 @@ if (btnSave) {
 
             addElementoToArray(newElementToAdd);
             createContentTable(newElementToAdd);
+
+            document.querySelector(".inputDate").value = ""
+            document.querySelector(".operator").value = "";
+            document.querySelector(".start-time").value = "";
+            document.querySelector(".end-time").value = "";
         })
     });
 }
@@ -76,7 +99,7 @@ function loadData() {
             contentTable.innerHTML = `
                 <tr>
                     <td>${element.date}</td>
-                    <td>${element.operator}</td>
+                    <td class="nameOperator">${element.operator}</td>
                     <td>${element.startTime}</td>
                     <td>${element.endTime}</td>
                     <td>${element.totalDay}</td>
@@ -106,3 +129,50 @@ function deleteRow(contentToDelete) {
         });
     });
 }
+
+// funcion para filtrar nombres(operadores) repetidos
+
+let nameOperator = document.querySelectorAll(".nameOperator");
+
+function filterName(nameOperator) {
+    let nameCounts = {};
+    let arrayNameOperator = Array.from(nameOperator);
+
+    arrayNameOperator.forEach(element => {
+        let name = element.value || element.textContent; // Toma el valor o texto del nodo
+        nameCounts[name] = (nameCounts[name] || 0) + 1;
+    })
+
+    console.log("Array para recorrer:", Array.from(nameOperator).map(el => el.value || el.textContent));
+    console.log(Object.keys(nameCounts));
+
+    const repeatedNames = Object.keys(nameCounts).filter(name => nameCounts[name] > 0);
+    return repeatedNames;
+}
+
+// Usar la función
+let repeatedNames = filterName(nameOperator);
+console.log("Nombres repetidos:", repeatedNames);
+
+let tBodyTotal = document.querySelector(".tBodyTotal");
+
+
+// dibujar en la tabla los nombres(operadores) de la primer tabla para despues calcular el total
+function writeNamePerPerson() {
+    if (repeatedNames) {
+        for (let i = 0; i < repeatedNames.length; i++) {
+            const element = repeatedNames[i];
+            let contentTableTotal = document.createElement('tr');
+            contentTableTotal.className = "trResume";
+            contentTableTotal.innerHTML =
+                ` 
+                 <td class="tdNameOperator">${element}</td>
+                 <td></td>
+                `
+            tBodyTotal.appendChild(contentTableTotal);
+        }
+        console.log("nombre cargados correctamente", repeatedNames)
+    }
+}
+
+writeNamePerPerson();

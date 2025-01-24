@@ -9,13 +9,13 @@
 </head>
 
 <body>
-    <h1>Organizacion taller</h1>
+    <h1>Organización taller</h1>
 
     <div>
-        <table>
+        <table class="tableCompleta">
             <thead>
                 <tr>
-                    <th>Fecha</th>
+                    <th class="tdDate">Fecha</th>
                     <th>Operador</th>
                     <th>Hora inicio</th>
                     <th>Hora fin</th>
@@ -26,7 +26,7 @@
             <tbody id="tbody">
                 <!-- Estrucutura vacia para inicializar -->
                 <tr>
-                    <td><input type="date" class="date"></td>
+                    <td><input type="date" class="inputDate"></td>
                     <td><input type="text" class="operator"></td>
                     <td><input type="number" class="start-time"></td>
                     <td><input type="number" class="end-time"></td>
@@ -36,6 +36,19 @@
                     </td>
                 </tr>
             </tbody>
+        </table>
+
+        <h3>Total horas:</h3>
+        <table class="tableResume">
+            <thead>
+                <tr>
+                    <th>Operador</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody class="tBodyTotal">
+            </tbody>
+       
         </table>
 
     </div>
