@@ -56,10 +56,7 @@ function createContentTable(newElement) {
 
     tbody.appendChild(contentTable);
     deleteRow(contentTable);
-    filterName(newElements);
-    // if(newElement){
-    //     writeNamePerPerson();
-    // }
+    updateSummaryTable();
 }
 
 //GUARDAR ELEMENTOS NUEVOS EN EL ARRAY (pasarlo a un DB a futuro)
@@ -136,45 +133,92 @@ function deleteRow(contentToDelete) {
 // funcion para filtrar nombres(operadores) repetidos
 // modificarlo para que cuando se agrega uno nuevo desde el input tambien se sume a la tabla.
 
-function filterName(arrayToFilterOperator) {
-    let nameCounts = {};
-    // let arrayNameOperator = Array.from(arrayToFilterOperator);
-    let arrayNameOperator = arrayToFilterOperator;
+// function filterName(arrayToFilterOperator) {
+//     let nameCounts = {};
 
-    arrayNameOperator.forEach(element => {
-        let name = element.operator; // Toma el valor o texto del nodo
-        nameCounts[name] = (nameCounts[name] || 0) + 1;
-    })
+//     arrayToFilterOperator.forEach(element => {
+//         let name = element.operator; // Toma el valor o texto del nodo
+//         nameCounts[name] = (nameCounts[name] || 0) + 1;
+//     })
 
-    console.log("Array para recorrer:", Array.from(arrayToFilterOperator).map(el => el.operator));
-    console.log(Object.keys(nameCounts));
+//     console.log("Array para recorrer:", Array.from(arrayToFilterOperator).map(el => el.operator && el.totalDay));
+//     console.log(Object.keys(nameCounts));
 
-    const repeatedNames = Object.keys(nameCounts).filter(name => nameCounts[name] > 0);
-    return repeatedNames;
-}
+//     const repeatedNames = Object.keys(nameCounts).filter(name => nameCounts[name] > 0);
+//     return repeatedNames;
+// }
 
-// Usar la función filterName()
-let repeatedNames = filterName(newElements);
-console.log("Nombres repetidos o unicos:", repeatedNames);
+// // Usar la función filterName()
+// let repeatedNames = filterName(newElements);
+// console.log("Nombres repetidos o unicos:", repeatedNames);
+
 
 let tBodyTotal = document.querySelector(".tBodyTotal");
 
-// dibujar en la tabla los nombres(operadores) de la primer tabla para despues calcular el total
+// dibujar la tabla resumen (nombre y horas totales)
 function writeNamePerPerson() {
-    if (repeatedNames) {
-        for (let i = 0; i < repeatedNames.length; i++) {
-            const element = repeatedNames[i];
+    if (allOperators) {
+        for (let i = 0; i < allOperators.length; i++) {
+            const element = allOperators[i];
             let contentTableTotal = document.createElement('tr');
             contentTableTotal.className = "trResume";
             contentTableTotal.innerHTML =
                 ` 
-                 <td class="tdNameOperator">${element}</td>
-                 <td class="totalPerPerson"></td>
+                 <td class="tdNameOperator">${element.operator}</td>
+                 <td class="totalPerPerson">${element.totalHours}</td>
                 `
             tBodyTotal.appendChild(contentTableTotal);
         }
-        console.log("nombre cargados correctamente", repeatedNames)
+        console.log("nombre cargados correctamente", allOperators)
     }
 }
 
+// calcular las horas totales por operadores
+function getOperatorHoursSummary(elements) {
+    let operatorData = {};
+    // Agrupar por operador y sumar las horas totales
+    elements.forEach(element => {
+        let operator = element.operator;
+        let hours = element.totalDay;
+
+        if (!operatorData[operator]) {
+            operatorData[operator] = {
+                count: 0,      // Cantidad de ocurrencias
+                totalHours: 0  // Total de horas trabajadas
+            };
+        }
+        operatorData[operator].count += 1;
+        operatorData[operator].totalHours += hours;
+    });
+
+    // Extraer todos los operadores y sus horas totales
+    let allOperators = Object.entries(operatorData).map(([operator, data]) => ({
+        operator,
+        totalHours: data.totalHours
+    }));
+
+    return allOperators;
+}
+
+// Usar la función
+let  allOperators = getOperatorHoursSummary(newElements);
+// Resultados
+console.log("Todos los operadores con horas totales:", allOperators);
+
+// usar funcion para hacer el resumen
 writeNamePerPerson();
+
+
+// Actualizar la tabla de resumen
+function updateSummaryTable() {
+    let allOperators = getOperatorHoursSummary(newElements);
+    tBodyTotal.innerHTML = ""; // Limpiar la tabla de resumen
+
+    allOperators.forEach(operatorData => {
+        let summaryRow = document.createElement('tr');
+        summaryRow.innerHTML = `
+        <td>${operatorData.operator}</td>
+        <td>${operatorData.totalHours}</td>`;
+        tBodyTotal.appendChild(summaryRow);
+    });
+}
